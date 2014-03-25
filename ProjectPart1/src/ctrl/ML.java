@@ -52,9 +52,7 @@ public class ML implements MouseListener, MouseMotionListener{
     {
         mouseEnd = me.getPoint();
         mousePressed = false;
-        double scale = dm.getScale();
-        dm.setView(new Rectangle2D.Double(mouseStart.x*scale, mouseStart.y*scale,
-            (mouseEnd.x-mouseStart.x)*scale, (mouseEnd.y - mouseStart.y)*scale));
+        calcView();
     }
 
     @Override
@@ -83,5 +81,14 @@ public class ML implements MouseListener, MouseMotionListener{
         currentMouse = e.getPoint();
         mouseDragged = false;
         e.consume();//Stops the event when not in use, makes program run faster
+    }
+    
+    private void calcView(){
+        double scale = dm.getScale();
+        double x1 = (mouseStart.getX()*scale)+dm.getOldX();
+        double y1 = (mouseStart.getY()*scale)+dm.getOldY();
+        double width = (mouseEnd.getX()- mouseStart.getX())*scale;
+        double height = (mouseEnd.getY() - mouseStart.getY())*scale;
+        dm.setView(new Rectangle2D.Double(x1, y1, width, height));
     }
 }

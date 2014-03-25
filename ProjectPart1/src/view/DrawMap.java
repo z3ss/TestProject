@@ -28,27 +28,32 @@ public class DrawMap extends JPanel {
     private double xmax, ymax;
     private Quadtree qt;
     private Rectangle2D view;
+    private double oldX = 0, oldY = 0;
 
     public DrawMap(ArrayList<Road> roads, double xmax, double ymax) {
         this.roads = roads;
         this.xmax = xmax;
         this.ymax = ymax;
+        view = new Rectangle2D.Double(0, 0, xmax, ymax);
     }
-    
-    public void setQT(Quadtree qt){
+
+    public void setQT(Quadtree qt) {
         this.qt = qt;
     }
 
     private void drawMap(Graphics2D g2) {
         scale = view.getWidth() / (double) this.getWidth();
+        if (scale < 1) {
+            scale = 1;
+        }
         for (Road r : roads) {
             double x1, x2, y1, y2;
             NodeData n1 = r.getFn();
             NodeData n2 = r.getTn();
-            x1 = (n1.getX_COORD()-view.getMinX()) / scale;
-            y1 = (n1.getY_COORD()-view.getMinY()) / scale;
-            x2 = (n2.getX_COORD()-view.getMinX()) / scale;
-            y2 = (n2.getY_COORD()-view.getMinY()) / scale;
+            x1 = (n1.getX_COORD() - view.getMinX()) / scale;
+            y1 = (n1.getY_COORD() - view.getMinY()) / scale;
+            x2 = (n2.getX_COORD() - view.getMinX()) / scale;
+            y2 = (n2.getY_COORD() - view.getMinY()) / scale;
 
             Line2D road = new Line2D.Double(x1, y1, x2, y2);
 
@@ -75,13 +80,22 @@ public class DrawMap extends JPanel {
         this.view = view;
         roads.clear();
         qt.getRoads(view, roads);
-        System.out.println(view.getWidth()+" "+view.getHeight());
-        System.out.println(""+roads.size());
+        System.out.println(view.getMinX() + " " + view.getMinY());
+        oldX = this.view.getMinX();
+        oldY = this.view.getMinY();
         repaint();
     }
 
     public double getScale() {
         return scale;
+    }
+
+    public double getOldX() {
+        return oldX;
+    }
+
+    public double getOldY() {
+        return oldY;
     }
 
     @Override

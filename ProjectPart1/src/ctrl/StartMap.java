@@ -73,7 +73,6 @@ public class StartMap {
         qt.getRoads(area, roads);
         DrawMap dm = new DrawMap(roads, xmax, ymax);
         dm.setQT(qt);
-        dm.setView(area);
         dm.addMouseListener(new ML(dm));
         frame.add(dm);
         frame.setVisible(true);
