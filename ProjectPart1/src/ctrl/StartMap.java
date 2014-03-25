@@ -5,10 +5,13 @@
  */
 package ctrl;
 
+import java.awt.BorderLayout;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import krakloader.EdgeData;
 import krakloader.KrakLoader;
 import krakloader.NodeData;
@@ -67,14 +70,20 @@ public class StartMap {
 
     private void setupFrame() {
         frame = new JFrame("Map Of Denmark");
-        frame.setSize(700, 600);
+        frame.setSize(700, 630);
         ArrayList<Road> roads = new ArrayList<>();
         Rectangle2D area = new Rectangle2D.Double(0, 0, xmax, ymax);
         qt.getRoads(area, roads);
         DrawMap dm = new DrawMap(roads, xmax, ymax);
         dm.setQT(qt);
-        dm.addMouseListener(new ML(dm));
-        frame.add(dm);
+        ML ml = new ML(dm, qt);
+        dm.addMouseListener(ml);
+        dm.addMouseMotionListener(ml);
+        frame.getContentPane().setLayout(new BorderLayout());
+        frame.getContentPane().add(dm, BorderLayout.CENTER);
+        JPanel south = new JPanel();
+        south.add(new JLabel("Not implemented"));
+        frame.getContentPane().add(south, BorderLayout.SOUTH);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

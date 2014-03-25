@@ -25,7 +25,7 @@ public class DrawMap extends JPanel {
 
     private ArrayList<Road> roads;
     private double scale = 1;
-    private double xmax, ymax;
+    public final double xmax, ymax;
     private Quadtree qt;
     private Rectangle2D view;
     private double oldX = 0, oldY = 0;
@@ -76,13 +76,13 @@ public class DrawMap extends JPanel {
         }
     }
 
-    public void setView(Rectangle2D view) {
+    public void zoomView(Rectangle2D view) {
         this.view = view;
         roads.clear();
         qt.getRoads(view, roads);
         System.out.println(view.getMinX() + " " + view.getMinY());
-        oldX = this.view.getMinX();
-        oldY = this.view.getMinY();
+        oldX = view.getMinX();
+        oldY = view.getMinY();
         repaint();
     }
 
