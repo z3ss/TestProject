@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import javax.swing.JLabel;
 import model.Quadtree;
 import model.Road;
 import view.DrawMap;
@@ -30,10 +31,12 @@ public class ML implements MouseListener, MouseMotionListener {
     private boolean mouseDragged;
     private final DrawMap dm;
     private final Quadtree qt;
+    private final JLabel label;
 
-    public ML(DrawMap dm, Quadtree qt) {
+    public ML(DrawMap dm, Quadtree qt, JLabel label) {
         this.dm = dm;
         this.qt = qt;
+        this.label = label;
     }
 
     @Override
@@ -96,27 +99,36 @@ public class ML implements MouseListener, MouseMotionListener {
 
     private void getRoad() {
         double scale = dm.getScale();
-        double x1 = (currentMouse.getX() + dm.getOldX()) * scale;
-        double y1 = (currentMouse.getY() + dm.getOldY()) * scale;
+        double x1 = currentMouse.getX() * scale + dm.getOldX();
+        double y1 = currentMouse.getY() * scale + dm.getOldY();
         ArrayList<Road> roads = new ArrayList<>();
-        qt.getRoads(new Rectangle2D.Double(x1, y1, y1, y1), roads);
-        double distance;
-        Road road = roads.get(0);
-        distance = Math.sqrt(Math.pow((road.midX - x1), 2) + Math.pow(road.midY - y1, 2));
+        qt.getRoads(new Rectangle2D.Double(x1, y1, 2, 2), roads);
+        System.out.println(""+roads.size());
+        double distance = 1;
+        Road road = null;
         for (Road r : roads) {
-            if (r.getEd().VEJNAVN != null) {
-                double temp = Math.sqrt(Math.pow((r.midX - x1), 2) + Math.pow(r.midY - y1, 2));
-                if (temp < distance) {
-                    distance = temp;
-                    road = r;
+            if (road == null && r.getEd().VEJNAVN != null || r.getEd().VEJNAVN.equals("")) {
+                road = r;
+                distance = Math.sqrt(Math.pow((road.midX - x1), 2) + Math.pow(road.midY - y1, 2));
+            } else if(road != null){
+                if (r.getEd().VEJNAVN != null || r.getEd().VEJNAVN.equals("")) {
+                    double temp = Math.sqrt(Math.pow((r.midX - x1), 2) + Math.pow(r.midY - y1, 2));
+                    if (temp < distance) {
+                        distance = temp;
+                        road = r;
 
-                }
-                if (distance < 1000) {
-                    System.out.println("V: " + r.getEd().VEJNAVN);
-                    return;
+                    }
+                    if (distance < 500) {
+                        label.setText(road.getEd().VEJNAVN);
+                        return;
+                    }
                 }
             }
         }
-        System.out.println("V: " + road.getEd().VEJNAVN);
+        if(road != null){
+            label.setText(road.getEd().VEJNAVN);
+        }else{
+            label.setText("No road found");
+        }
     }
 }

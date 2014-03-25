@@ -6,6 +6,7 @@
 package ctrl;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,13 +77,14 @@ public class StartMap {
         qt.getRoads(area, roads);
         DrawMap dm = new DrawMap(roads, xmax, ymax);
         dm.setQT(qt);
-        ML ml = new ML(dm, qt);
+        JLabel label = new JLabel("No road found");
+        ML ml = new ML(dm, qt, label);
         dm.addMouseListener(ml);
         dm.addMouseMotionListener(ml);
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(dm, BorderLayout.CENTER);
         JPanel south = new JPanel();
-        south.add(new JLabel("Not implemented"));
+        south.add(label);
         frame.getContentPane().add(south, BorderLayout.SOUTH);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
