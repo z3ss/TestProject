@@ -103,7 +103,6 @@ public class ML implements MouseListener, MouseMotionListener {
         double y1 = currentMouse.getY() * scale + dm.getOldY();
         ArrayList<Road> roads = new ArrayList<>();
         qt.getRoads(new Rectangle2D.Double(x1, y1, 2, 2), roads);
-        System.out.println(""+roads.size());
         double distance = 1;
         Road road = null;
         for (Road r : roads) {
